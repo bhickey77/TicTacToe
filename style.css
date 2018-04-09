@@ -1,0 +1,45 @@
+body {
+  width: 100vw;
+  font-family: 'Aldrich', sans-serif;
+
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.hdr {
+  text-align: center;
+  margin-bottom: 59px;
+}
+
+.game {
+  margin: 0 auto;
+  font-size: 60px;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse:collapse;
+  color: white;
+}
+td {
+  padding: 30px;
+  text-align: center;
+  vertical-align: center;
+}
+
+.two {
+  border-bottom: 5px solid black;
+  border-top: 5px solid black;
+}
+
+.b {
+  border-left: 5px solid black;
+  border-right: 5px solid black;
+}
+
+.x {
+  color: black;
+}
