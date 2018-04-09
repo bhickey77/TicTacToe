@@ -92,7 +92,7 @@ var APP = APP || {
   numHumans: 0,
   p1: "X",
   p2: "O",
-  currentPlayer: "O",
+  currentPlayer: "X",
   winningCombos: [
     [0, 1, 2],
     [3, 4, 5],
@@ -117,7 +117,6 @@ var APP = APP || {
     // to set elements to the squares array after HTML rendering
     for(var i = 0; i < APP.squares.length; i++){
       APP.squares[i].elementIs = $("td:eq("+i+")");
-      console.log(APP.squares[i].elementIs);
     }
   },
 
@@ -128,19 +127,23 @@ var APP = APP || {
           APP.squares[i].playedBy = APP.currentPlayer;
           APP.squares[i].charInside = APP.currentPlayer;
           APP.squares[i].elementIs.text(APP.currentPlayer);
+          APP.squares[i].elementIs.addClass("x");
+          APP.totalMoves++;
           if(APP.checkWinner()){
-            console.log(APP.currentPlayer + " won!");
             $("h2").text(APP.currentPlayer + " won!");
             APP.endGame();
+            return;
+          }
+          if(APP.totalMoves == 9){
+            $("h2").text("Draw!");
+            return;
           }
           APP.currentPlayer = (APP.currentPlayer == APP.p1) ? APP.p2 : APP.p1;
           APP.squares[i].played = true;
-          APP.totalMoves++;
           // add class to make text visible;
-          APP.squares[i].elementIs.addClass("x");
-          // if(APP.currentPlayer == APP.p2){
-          //   APP.computerMove();
-          // }
+          if(APP.currentPlayer == APP.p2){
+            APP.computerMove();
+          }
         }
       });
     }
@@ -153,8 +156,6 @@ var APP = APP || {
   checkWinner: function(){
     var winner = false;
     APP.winningCombos.some(function(combo){
-      // console.log(APP.squares[0]);
-      // console.log(APP.squares[combo[0]]);
       winner = APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside;
       if(winner){return winner;};
     });
@@ -171,14 +172,23 @@ var APP = APP || {
     COMPUTER PLAYER
   =================*/
 
+randomMove: function(){
+    var randSquare = Math.floor(Math.random() * 9);
+    if(!APP.squares[randSquare].played){
+      return randSquare;
+    }
+    return APP.randomMove();
+},
+
 computerMove: function(){
-  if(APP.checkWinningMoves()){
-    return APP.checkWinningMoves();
-  }
-  if(APP.checkLosingMoves()){
-    return APP.checkLosingMoves();
-  }
-  APP.determineNonWinOrLoseMove();
+  APP.squares[APP.randomMove()].elementIs.click();
+  // if(APP.checkWinningMoves()){
+  //   return APP.checkWinningMoves();
+  // }
+  // if(APP.checkLosingMoves()){
+  //   return APP.checkLosingMoves();
+  // }
+  // APP.determineNonWinOrLoseMove();
 },
 
 checkWinningMoves: function(){
