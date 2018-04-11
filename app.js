@@ -141,9 +141,11 @@ var APP = APP || {
           APP.currentPlayer = (APP.currentPlayer == APP.p1) ? APP.p2 : APP.p1;
           APP.squares[i].played = true;
           // add class to make text visible;
-          if(APP.currentPlayer == APP.p2){
-            APP.computerMove();
-          }
+          setTimeout(function(){
+            if(APP.currentPlayer == APP.p2){
+              APP.computerMove();
+            }
+          }, (Math.random()*1000 + 1000));
         }
       });
     }
@@ -181,35 +183,61 @@ randomMove: function(){
 },
 
 computerMove: function(){
-  if(APP.checkWinningMoves()){
+  if(APP.checkWinningMoves() !== undefined){
     APP.squares[APP.checkWinningMoves()].elementIs.click();
     return;
   }
-  if(APP.checkLosingMoves()){
+  if(APP.checkLosingMoves() !== undefined){
     APP.squares[APP.checkLosingMoves()].elementIs.click();
     return;
   }
   // APP.determineNonWinOrLoseMove();
-  if(APP.totalMoves == 1 && (APP.squares[0].played || APP.squares[2].played || APP.squares[6].played || APP.squares[8].played)){
-    APP.squares[4].elementIs.click();
-    return;
+  if(APP.totalMoves == 1){
+    if(!APP.squares[4].played){
+      APP.squares[4].elementIs.click();
+      return;
+    } else {
+      APP.squares[0].elementIs.click();
+      return;
+    }
   }
-  if(APP.totalMoves == 3 && APP.squares[4].charInside == APP.p2){
-    if(!APP.squares[1].played){
-      APP.squares[1].elementIs.click();
-      return;
+
+  if(APP.totalMoves == 3){
+    if(APP.squares[4].charInside == APP.p2){
+      if(!APP.squares[1].played){
+        APP.squares[1].elementIs.click();
+        return;
+      }
+      if(!APP.squares[3].played){
+        APP.squares[3].elementIs.click();
+        return;
+      }
+      if(!APP.squares[5].played){
+        APP.squares[5].elementIs.click();
+        return;
+      }
+      if(!APP.squares[7].played){
+        APP.squares[7].elementIs.click();
+        return;
+      }
     }
-    if(!APP.squares[3].played){
-      APP.squares[3].elementIs.click();
-      return;
-    }
-    if(!APP.squares[5].played){
-      APP.squares[5].elementIs.click();
-      return;
-    }
-    if(!APP.squares[7].played){
-      APP.squares[7].elementIs.click();
-      return;
+    if(APP.squares[4].charInside == APP.p1){
+      if(!APP.squares[0].played){
+        APP.squares[0].elementIs.click();
+        return;
+      }
+      if(!APP.squares[2].played){
+        APP.squares[2].elementIs.click();
+        return;
+      }
+      if(!APP.squares[6].played){
+        APP.squares[6].elementIs.click();
+        return;
+      }
+      if(!APP.squares[8].played){
+        APP.squares[8].elementIs.click();
+        return;
+      }
     }
   }
   APP.squares[APP.randomMove()].elementIs.click();

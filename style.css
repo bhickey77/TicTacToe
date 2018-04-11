@@ -43,3 +43,8 @@ td {
 .x {
   color: black;
 }
+
+h2 {
+  margin: 0 auto;
+  align-content: center;
+}
