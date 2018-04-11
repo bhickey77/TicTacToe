@@ -181,44 +181,70 @@ randomMove: function(){
 },
 
 computerMove: function(){
-  APP.squares[APP.randomMove()].elementIs.click();
-  // if(APP.checkWinningMoves()){
-  //   return APP.checkWinningMoves();
-  // }
-  // if(APP.checkLosingMoves()){
-  //   return APP.checkLosingMoves();
-  // }
+  if(APP.checkWinningMoves()){
+    APP.squares[APP.checkWinningMoves()].elementIs.click();
+    return;
+  }
+  if(APP.checkLosingMoves()){
+    APP.squares[APP.checkLosingMoves()].elementIs.click();
+    return;
+  }
   // APP.determineNonWinOrLoseMove();
+  if(APP.totalMoves == 1 && (APP.squares[0].played || APP.squares[2].played || APP.squares[6].played || APP.squares[8].played)){
+    APP.squares[4].elementIs.click();
+    return;
+  }
+  if(APP.totalMoves == 3 && APP.squares[4].charInside == APP.p2){
+    if(!APP.squares[1].played){
+      APP.squares[1].elementIs.click();
+      return;
+    }
+    if(!APP.squares[3].played){
+      APP.squares[3].elementIs.click();
+      return;
+    }
+    if(!APP.squares[5].played){
+      APP.squares[5].elementIs.click();
+      return;
+    }
+    if(!APP.squares[7].played){
+      APP.squares[7].elementIs.click();
+      return;
+    }
+  }
+  APP.squares[APP.randomMove()].elementIs.click();
 },
 
 checkWinningMoves: function(){
+  var move;
   APP.winningCombos.some(function(combo){
     if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.p2){
-      return APP.squares[combo[2]];
+      move = combo[2];
     }
     if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.p2){
-      return APP.squares[combo[1]];
+      move = combo[1];
     }
     if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.p2){
-      return APP.squares[combo[0]];
+      move = combo[0];
     }
   });
-  return false;
+  return move;
 },
 
 checkLosingMoves: function(){
+  var move;
   APP.winningCombos.some(function(combo){
     if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.p1){
-      return APP.squares[combo[2]];
+      move = combo[2];
     }
     if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.p1){
-      return APP.squares[combo[1]];
+      move = combo[1];
     }
     if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.p1){
-      return APP.squares[combo[0]];
+      move = combo[0];
     }
   });
-  return false;
+  return move;
 }
 
 };
