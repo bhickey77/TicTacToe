@@ -4,90 +4,13 @@ app object
 
 var APP = APP || {
   // initialize array of squares
-  squares: [
-    {
-      id: 1,
-      col: 1,
-      row: 1,
-      played: false,
-      playedBy: "",
-      //char inside might be used if there are custom player characters in the future
-      charInside: "0",
-      elementIs: $("#1a")
-    },
-    {
-      id: 2,
-      col: 2,
-      row: 1,
-      played: false,
-      playedBy: "",
-      charInside: "1",
-      elementIs: $("#1b")
-    },
-    {
-      id: 3,
-      col: 3,
-      row: 1,
-      played: false,
-      playedBy: "",
-      charInside: "2",
-      elementIs: $("#1c")
-    },
-    {
-      id: 4,
-      col: 1,
-      row: 2,
-      played: false,
-      playedBy: "",
-      charInside: "3",
-      elementIs: $("#2a")
-    },
-    {
-      id: 5,
-      col: 2,
-      row: 2,
-      played: false,
-      playedBy: "",
-      charInside: "4",
-      elementIs: $("#2b")
-    },
-    {
-      id: 6,
-      col: 3,
-      row: 2,
-      played: false,
-      playedBy: "",
-      charInside: "5",
-      elementIs: $("#2c")
-    },
-    {
-      id: 7,
-      col: 1,
-      row: 3,
-      played: false,
-      playedBy: "",
-      charInside: "6",
-      elementIs: $("#3a")
-    },
-    {
-      id: 8,
-      col: 2,
-      row: 3,
-      played: false,
-      playedBy: "",
-      charInside: "7",
-      elementIs: $("#3b")
-    },
-    {
-      id: 9,
-      col: 3,
-      row: 3,
-      played: false,
-      playedBy: "",
-      charInside: "8",
-      elementIs: $("#3c")
-    },
-  ],
+  initializeSquares: function(){
+    APP.squares = [];
+    for(var i = 0; i < 9; i++){
+      APP.squares.push({charInside: i});
+    }
+  },
+
   totalMoves: 0,
   numHumans: 0,
   p1: "X",
@@ -105,6 +28,7 @@ var APP = APP || {
   ],
 
   initApp: function(){
+    this.initializeSquares();
     this.addSelectorsToAppObject();
     this.applyListeners();
     // this.promptNumHumans();
