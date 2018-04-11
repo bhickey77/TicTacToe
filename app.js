@@ -3,18 +3,19 @@ app object
 ===============*/
 
 var APP = APP || {
+
   // initialize array of squares
   initializeSquares: function(){
     APP.squares = [];
     for(var i = 0; i < 9; i++){
-      APP.squares.push({charInside: i});
+  // place character inside so that cells do not equal when performing a comparison to determine if there has been a winner
+    APP.squares.push({charInside: i});
     }
   },
-
-  totalMoves: 0,
+  totalMovesPlayed: 0, // counter to determine if the game is over without a winner
   numHumans: 0,
-  p1: "X",
-  p2: "O",
+  player1: "X",
+  player2: "O",
   currentPlayer: "X",
   winningCombos: [
     [0, 1, 2],
@@ -37,6 +38,7 @@ var APP = APP || {
     // prompt start
     // apply onclicks
   },
+
   addSelectorsToAppObject: function(){
     // to set elements to the squares array after HTML rendering
     for(var i = 0; i < APP.squares.length; i++){
@@ -52,21 +54,21 @@ var APP = APP || {
           APP.squares[i].charInside = APP.currentPlayer;
           APP.squares[i].elementIs.text(APP.currentPlayer);
           APP.squares[i].elementIs.addClass("x");
-          APP.totalMoves++;
+          APP.totalMovesPlayed++;
           if(APP.checkWinner()){
             $("h2").text(APP.currentPlayer + " won!");
             APP.endGame();
             return;
           }
-          if(APP.totalMoves == 9){
+          if(APP.totalMovesPlayed == 9){
             $("h2").text("Draw!");
             return;
           }
-          APP.currentPlayer = (APP.currentPlayer == APP.p1) ? APP.p2 : APP.p1;
+          APP.currentPlayer = (APP.currentPlayer == APP.player1) ? APP.player2 : APP.player1;
           APP.squares[i].played = true;
           // add class to make text visible;
           setTimeout(function(){
-            if(APP.currentPlayer == APP.p2){
+            if(APP.currentPlayer == APP.player2){
               APP.computerMove();
             }
           }, (Math.random()*1000 + 1000));
@@ -116,7 +118,7 @@ computerMove: function(){
     return;
   }
   // APP.determineNonWinOrLoseMove();
-  if(APP.totalMoves == 1){
+  if(APP.totalMovesPlayed == 1){
     if(!APP.squares[4].played){
       APP.squares[4].elementIs.click();
       return;
@@ -126,8 +128,26 @@ computerMove: function(){
     }
   }
 
-  if(APP.totalMoves == 3){
-    if(APP.squares[4].charInside == APP.p2){
+  if(APP.totalMovesPlayed == 3){
+    if(APP.squares[4].charInside == APP.player2){
+      if(APP.countHumanPlaysInCorners() < 2){
+        if(!APP.squares[0].played){
+          APP.squares[0].elementIs.click();
+          return;
+        }
+        if(!APP.squares[2].played){
+          APP.squares[2].elementIs.click();
+          return;
+        }
+        if(!APP.squares[6].played){
+          APP.squares[6].elementIs.click();
+          return;
+        }
+        if(!APP.squares[8].played){
+          APP.squares[8].elementIs.click();
+          return;
+        }
+      }
       if(!APP.squares[1].played){
         APP.squares[1].elementIs.click();
         return;
@@ -145,7 +165,7 @@ computerMove: function(){
         return;
       }
     }
-    if(APP.squares[4].charInside == APP.p1){
+    if(APP.squares[4].charInside == APP.player1){
       if(!APP.squares[0].played){
         APP.squares[0].elementIs.click();
         return;
@@ -167,16 +187,25 @@ computerMove: function(){
   APP.squares[APP.randomMove()].elementIs.click();
 },
 
+countHumanPlaysInCorners: function(){
+  var numberOfPlays = 0;
+  if(APP.squares[0].charInside == APP.player1){numberOfPlays++;}
+  if(APP.squares[2].charInside == APP.player1){numberOfPlays++;}
+  if(APP.squares[6].charInside == APP.player1){numberOfPlays++;}
+  if(APP.squares[8].charInside == APP.player1){numberOfPlays++;}
+  return numberOfPlays;
+},
+
 checkWinningMoves: function(){
   var move;
   APP.winningCombos.some(function(combo){
-    if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.p2){
+    if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.player2){
       move = combo[2];
     }
-    if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.p2){
+    if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.player2){
       move = combo[1];
     }
-    if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.p2){
+    if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.player2){
       move = combo[0];
     }
   });
@@ -186,19 +215,49 @@ checkWinningMoves: function(){
 checkLosingMoves: function(){
   var move;
   APP.winningCombos.some(function(combo){
-    if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.p1){
+    if(APP.squares[combo[0]].charInside == APP.squares[combo[1]].charInside && !APP.squares[combo[2]].played && APP.squares[combo[0]].charInside == APP.player1){
       move = combo[2];
     }
-    if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.p1){
+    if(APP.squares[combo[0]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[1]].played && APP.squares[combo[0]].charInside == APP.player1){
       move = combo[1];
     }
-    if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.p1){
+    if(APP.squares[combo[1]].charInside == APP.squares[combo[2]].charInside && !APP.squares[combo[0]].played && APP.squares[combo[1]].charInside == APP.player1){
       move = combo[0];
     }
   });
   return move;
+},
+
+// returns an object out of the current board with three arrays to be used by Minimax Algorithm
+createGameBoard: function(){
+  var gameBoard = {};
+  APP.squares.forEach(function(square, index){
+      if(square.played){gameBoard.playedSquares.push(index);}
+  });
+  APP.squares.forEach(function(square, index){
+      if(!square.played){gameBoard.unplayedSquares.push(index);}
+  });
+  APP.squares.forEach(function(square, index){
+      if(square.charInside == player1){gameBoard.player1squares.push(index);}
+  });
+  APP.squares.forEach(function(square, index){
+      if(square.charInside == player2){gameBoard.player2squares.push(index);}
+  });
+  gameBoard.currentPlayer = APP.currentPlayer;
+  return gameBoard;
 }
 
+};
+
+
+APP.simulator = {
+
+    runMinimaxAlgorithm: function(gameBoard){
+
+      gameBoard.unplayedSquares.forEach(function(possibleMove){
+          APP.simulator.runMinimaxAlgorithm();
+      });
+    }
 };
 
 $(document).ready(function(){
